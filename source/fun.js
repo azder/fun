@@ -2,7 +2,7 @@
  * Created by azder on 2014-03-05.
  */
 
-//  The fun to play with functional suplement for JS
+//  The fun to play with functional supplement for JS
 var fun = (function () {
 
     // ## use strict
