@@ -10,7 +10,7 @@ var fun = (function () {
     'use strict';
 
     // ## var
-    // start of all the variables declarations/definitions
+    // start of all the definitions
     var
 
     //
@@ -18,36 +18,160 @@ var fun = (function () {
 
     },
 
-    // ## noop
-    // the _no operation_ function that doesn't do anything but
-    //  can be used as a default in places  where a function is expected
+    // ## Combinables
+
+    // ### noop
+    // doesn't do anything but can be used as a default in places where a function is expected
+
     noop = function () {
     },
 
-    // ## ident
+    // ### ident
     // the identity function which only takes 1 parameter
     // and just returns that same parameter
+
     ident = function (value) {
         return value;
     },
 
-    // a **test** function which gives `true` when
-    // the provided `value` is either `null` or `undefined`
+    // ## Testers
+
+    // ### nil
+    // returns `true` when  `value` is either `null` or `undefined`
     // and returns `false` for everything else
+
     nil = function (value) {
         return null === value || void 0 === value;
     },
 
-    object = function (value, dfault) {
-        return (nil(value) ? (nil(dfault) ? {} : dfault) : value);
+    // ### isa
+    // returns `true` when `value` is an `Array`, `false` otherwise
+
+    isa = Array.isArray,
+
+    // ### streq
+    // returns `true` when `value1` and `value2` converted to strings  are equal, `false` otherwise
+
+    streq = function (value1, value2) {
+        return ('' + value1) === ('' + value2);
     },
 
-    string = function (value, dfault) {
-        return (nil(value) ? (nil(dfault) ? '' : '' + dfault) : '' + value);
+    // ### nostreq
+    // returns `true` when `value1` and `value2` converted to strings are not equal, `false` otherwise
+
+    nostreq = function (value1, value2) {
+        return ('' + value1) !== ('' + value2);
     },
+
+    // ### truthy
+    // returns `true` for any value that is not:
+    // `false`, `"false"` (false in quotes),
+    // `0` (zero), `"0"` (zero in quotes),
+    // `null`, `undefined`, `NaN`,
+    // `""` (empty string), `"off"`, `"no"`
+    // and returns `false` otherwise
+
+    truthy = function (value) {
+
+        if (null === value || void 0 === value) {
+            return false;
+        }
+
+        if (!value) {
+            return false;
+        }
+
+        value = '' + value;
+
+        return 'null' !== value && 'undefined' !== value && '0' !== value && 'false' !== value && 'off' !== value && 'no' !== value;
+
+    },
+
+    // ### falsy
+    // returns `true` for any value that is:
+    // `false`, `"false"` (false in quotes),
+    // `0` (zero), `"0"` (zero in quotes),
+    // `null`, `undefined`, `NaN`,
+    // `""` (empty string), `"off"`, `"no"`
+    // and returns `false` otherwise
+
+    falsy = function (value) {
+
+        if (null === value || void 0 === value) {
+            return true;
+        }
+
+        if (!value) {
+            return true;
+        }
+
+        value = '' + value;
+
+        return 'null' === value || 'undefined' === value || '0' === value || 'false' === value || 'off' === value || 'no' === value;
+
+
+    },
+
+    // ## Converters
+
+    // ### bool
+    // returns either `true` or `false` based on `value`
+
+    bool = function (value) {
+        return !!value;
+    },
+
+    // ## Pickers
+
+    // ### elvis
+    // returns `value` if it is not nil, the `dfault` otherwise
+    // even if `undefined`
+    // **trivia**: name comes from the `?:` (elvis) operator in some languages
 
     elvis = function (value, dfault) {
         return (nil(value) ? dfault : value);
+    },
+
+
+    object = function (value, dfault) {
+
+        var i = 1, len = arguments.length;
+
+        while (nil(value) && i < len) {
+            value = arguments[i];
+            i += 1;
+        }
+
+        return nil(value) ? {} : value;
+
+    },
+
+    string = function (value, dfault) {
+
+        var i = 1, len = arguments.length;
+
+        while (nil(value) && i < len) {
+            value = arguments[i];
+            i += 1;
+        }
+
+        return nil(value) ? '' : '' + value;
+
+    },
+
+    array = function (value, dfault) {
+
+        var i = 1, len = arguments.length;
+
+        while (nil(value) && !isa(value) && i < len) {
+
+            value = arguments[i];
+            i += 1;
+
+        }
+
+        return nil(value) && !isa(value) ? [] : value;
+
     },
 
     nav = function (obj, path) {
@@ -83,18 +207,24 @@ var fun = (function () {
 
     },
 
-    switcher = function () {
+    switcher = function (dfault, map) {
 
-        return function (dfault, map) {
+        map = object(map);
 
-            map = elvis(map, {});
-
-            return function (key) {
-                return elvis(map[key], dfault);
-            };
-
+        return function (key) {
+            return elvis(map[key], dfault);
         };
 
+    },
+
+    strategist = function (dfault, map, tests) {
+
+        var s = switcher(dfault, map);
+
+        return function () {
+            var args; //TODO: to array
+            return s[key].apply();
+        };
 
     },
 
@@ -110,15 +240,36 @@ var fun = (function () {
             }
         };
 
+    },
+
+    to = function (value) {
+
     }
-    // var ends here
+
     ;
 
+    // ## Exposed
+    // only these are accessible from the outside
 
     return {
-        nil:    nil,
-        object: object,
-        nav:    nav
+        noop:      noop,
+        ident:     ident,
+        nil:       nil,
+        streq:     streq,
+        nostreq:   nostreq,
+        truthy:    truthy,
+        falsy:     falsy,
+        bool:      bool,
+        elvis:     elvis,
+        object:    object,
+        string:    string,
+        nav:       nav,
+        extend:    extend,
+        switcher:  switcher,
+        stategist: strategist,
+        enclose:   enclose,
+        is:        is
     };
 
-}());
+}
+());
