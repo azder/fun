@@ -1,9 +1,35 @@
+/*global define:true*/
+/*jshint node:true*/
+
+//noinspection ThisExpressionReferencesGlobalObjectJS
 /**
  * Created by azder on 2014-03-05.
  */
 
 //  The fun to play with functional supplement for JS
-var fun = (function () {
+(function (G, factory) {
+
+    'use strict';
+
+    var name = 'fun';
+
+    if ('object' === typeof module && 'object' === typeof module.exports) {
+        module.exports = factory(G);
+        return;
+
+    }
+
+
+    if ('function' === typeof define && define.amd) {
+        define(name, factory);
+        return;
+    }
+
+    // Browser global
+    G[name] = factory(G);
+
+
+}(this, function () {
 
     // ## use strict
     // ALWAYS use this flavor of JS which saves headaches
@@ -13,10 +39,17 @@ var fun = (function () {
     // start of all the definitions
     var
 
-    //
-    privates = {
+    // ## "Imports"
 
-    },
+    OP = Object.prototype,
+    AP = Array.prototype,
+    FP = Function.prototype,
+
+    call = FP.call,
+    slice = call.bind(AP.slice),
+    tos = call.bind(OP.toString),
+    owns = call.bind(OP.hasOwnProperty),
+
 
     // ## Combinables
 
@@ -34,7 +67,6 @@ var fun = (function () {
         return value;
     },
 
-    // ## Testers
 
     // ### nil
     // returns `true` when  `value` is either `null` or `undefined`
@@ -44,10 +76,27 @@ var fun = (function () {
         return null === value || void 0 === value;
     },
 
+    // ### ensure
+    // returns `value` if it is not nil, the `dfault` otherwise
+    // even if `undefined`
+
+    ensure = function (value, dfault) {
+        return nil(value) ? dfault : value;
+    },
+
     // ### isa
     // returns `true` when `value` is an `Array`, `false` otherwise
 
-    isa = Array.isArray,
+    isa = ensure(Array.isArray, function (value) {
+        return tos(value) === '[object Array]';
+    }),
+
+    // ### isn
+    // returns `true` when `value` is a `Number`, `false` otherwise
+
+    isn = function (value) {
+        return value === +value;
+    },
 
     // ### streq
     // returns `true` when `value1` and `value2` converted to strings  are equal, `false` otherwise
@@ -121,19 +170,7 @@ var fun = (function () {
         return !!value;
     },
 
-    // ## Pickers
-
-    // ### elvis
-    // returns `value` if it is not nil, the `dfault` otherwise
-    // even if `undefined`
-    // **trivia**: name comes from the `?:` (elvis) operator in some languages
-
-    elvis = function (value, dfault) {
-        return (nil(value) ? dfault : value);
-    },
-
-
-    object = function (value, dfault) {
+    object = function (value) {
 
         var i = 1, len = arguments.length;
 
@@ -146,7 +183,7 @@ var fun = (function () {
 
     },
 
-    string = function (value, dfault) {
+    string = function (value) {
 
         var i = 1, len = arguments.length;
 
@@ -159,78 +196,187 @@ var fun = (function () {
 
     },
 
-    array = function (value, dfault) {
+    number = function (value) {
 
-        var i = 1, len = arguments.length;
-
-        while (nil(value) && !isa(value) && i < len) {
-
-            value = arguments[i];
-            i += 1;
-
-        }
-
-        return nil(value) && !isa(value) ? [] : value;
-
-    },
-
-    nav = function (obj, path) {
-
-        var i, props, len;
-
-        if (nil(obj)) {
-            return obj;
-        }
-
-        props = string(path).split('.');
-        len = props.length;
+        var i, len = arguments.length;
 
         for (i = 0; i < len; i += 1) {
 
-            obj = obj[props[i]];
+            value = parseFloat('' + arguments[i]);
+
+            if (!nil(value) && !isNaN(value) && isFinite(value)) {
+                return value;
+            }
+
+        }
+
+        return 0;
+
+    },
+
+    values = function (o) {
+
+        var key, values = [];
+        o = object(o);
+
+        for (key in o) {
+            //noinspection JSUnfilteredForInLoop
+            if (owns(o, key)) {
+                //noinspection JSUnfilteredForInLoop
+                values.push(o[key]);
+            }
+        }
+
+        return values;
+
+    },
+
+    array = function () {
+
+        var i, arg, len = arguments.length;
+
+        for (i = 0; i < len; i += 1) {
+
+            arg = arguments[i];
+
+            if (nil(arg)) {
+                continue;
+            }
+
+            if (isa(arg)) {
+                return arg;
+            }
+
+            return values(arg);
+
+        }
+
+        return [];
+
+    },
+
+
+    dot = function (field) {
+        return function (obj) {
+            return object(obj)[field];
+        };
+    },
+
+    nav = function (path) {
+
+
+        return function (obj) {
+
+            var i, props, len;
 
             if (nil(obj)) {
                 return obj;
             }
 
-        }
+            props = string(path).split('.');
+            len = props.length;
 
-        return obj;
+            for (i = 0; i < len; i += 1) {
+
+                obj = obj[props[i]];
+
+                if (nil(obj)) {
+                    return obj;
+                }
+
+            }
+
+            return obj;
+        };
 
     },
+
+
+    // ##
+    iterator = function (callback, context) {
+
+        var fn = callback.bind(context);
+
+        return function (object) {
+
+            var length, i;
+
+            if (nil(object) || nil(callback)) {
+                return object;
+            }
+
+            length = object.length;
+
+            if (!isn(length)) {
+                for (i in object) {
+                    //noinspection JSUnfilteredForInLoop
+                    if (owns(object, i) && null === fn(object[i], i, object)) {
+                        return object;
+                    }
+                }
+                return object;
+            }
+
+            for (i = 0; i < length; i += 1) {
+                if (null === fn(object[i], i, object)) {
+                    return object;
+                }
+            }
+
+            return object;
+
+        };
+
+    },
+
 
     extend = function () {
 
     },
 
-    enrich = function () {
-
-    },
-
-    switcher = function (dfault, map) {
+    switcher = function (map) {
 
         map = object(map);
 
         return function (key) {
-            return elvis(map[key], dfault);
+            return ensure(map[string(key)], map['']);
         };
 
     },
 
-    strategist = function (dfault, map, tests) {
+    selector = function (map) {
 
-        var s = switcher(dfault, map);
+        map = object(map);
 
         return function () {
-            var args; //TODO: to array
-            return s[key].apply();
+
+            var key, result, args;
+
+            args = slice(arguments);
+
+            for (key in map) {
+
+                //noinspection JSUnfilteredForInLoop
+                if (!owns(map, key)) {
+                    continue;
+                }
+
+                //noinspection JSUnfilteredForInLoop
+                result = string(map(key).apply(this, args));
+
+                if (result) {
+                    return result;
+                }
+
+            }
+
+            return '';
+
         };
 
-    },
-
-    enclose = function (value, map) {
 
     },
+
 
     is = function (value) {
 
@@ -242,11 +388,46 @@ var fun = (function () {
 
     },
 
-    to = function (value) {
+    to = function () {
+
+    },
+
+    curry = function (fn) {
+
+        var args = slice(arguments, 1);
+        return function () {
+            return fn.apply(this, args.concat(slice(arguments)));
+        };
+    },
+
+    acurry = function (fn, argn) {
+
+        fn = ensure(fn, noop);
+        argn = number(argn, fn.length);
+
+        var f = function () {
+
+            var diff = argn - arguments.length;
+
+            if (0 >= diff) {
+                return fn.apply(this, arguments);
+            }
+
+            return acurry(curry.apply(this, [fn].concat(slice(arguments))), diff);
+
+        };
+
+        f.toString = function () {
+            return fn.toString();
+        };
+
+        f.curried = true;
+        return f;
 
     }
 
     ;
+
 
     // ## Exposed
     // only these are accessible from the outside
@@ -260,16 +441,25 @@ var fun = (function () {
         truthy:    truthy,
         falsy:     falsy,
         bool:      bool,
-        elvis:     elvis,
+        ensure:    ensure,
         object:    object,
         string:    string,
+        number:    number,
+        array:     array,
         nav:       nav,
+        iterator:  iterator,
         extend:    extend,
         switcher:  switcher,
-        stategist: strategist,
-        enclose:   enclose,
-        is:        is
+        selector:  selector,
+        stategist: noop,
+        enclose:   noop,
+        to:        to,
+        is:        is,
+        dot:       dot,
+        curry:     curry,
+        acurry:    acurry,
+        slice:     slice,
+        owns:      owns
     };
 
-}
-());
+}));
