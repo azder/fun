@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./node_modules/docco/bin/docco -l parallel -c docco/parallel.css source/fun.js
+./node_modules/.bin/docco -o docs/docco -l parallel -c docco/parallel.css source/fun.js
