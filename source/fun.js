@@ -1,7 +1,7 @@
 /*global define:false, module:false */
 
 //: The fun to play with functional supplement for JS
-//: Created by Azder (azhder@gmail.com) on 2014-03-05.
+//: Created by Azder [(azhder@gmail.com)](mailto:azhder@gmail.com) on 2014-03-05.
 
 //noinspection ThisExpressionReferencesGlobalObjectJS
 (function (G, factory) {
@@ -9,7 +9,7 @@
     //: A function that handles the exporting of
     //: this library into the environment
 
-    //ALWAYS
+    // ALWAYS
     'use strict';
 
     //: the name to use as a global for this library
@@ -37,8 +37,7 @@
 
 }(this, function () {
 
-    // ## use strict
-    // ALWAYS use this flavor of JS which saves headaches
+    // ALWAYS
     'use strict';
 
     //: ## var
@@ -95,9 +94,9 @@
         return null === value || void 0 === value;
     },
 
-    // ### ensure
-    // returns `value` if it is not nil, the `dfault` otherwise
-    // even if `undefined`
+    //: ### ensure
+    //: returns `value` if it is not nil, the `dfault` otherwise
+    //: even if `undefined`
 
     ensure = function (value, dfault) {
         return nil(value) ? dfault : value;
@@ -135,22 +134,40 @@
     //: returns `true` when `value1` and `value2` converted to strings  are equal, `false` otherwise
 
     streq = function (value1, value2) {
-        return ('' + value1) === ('' + value2);
+        return tos(value1) === tos(value2);
     },
 
     //: ### nostreq
     //: returns `true` when `value1` and `value2` converted to strings are not equal, `false` otherwise
 
     nostreq = function (value1, value2) {
-        return ('' + value1) !== ('' + value2);
+        return tos(value1) !== tos(value2);
+    },
+
+
+    //: ### valeq
+    valeq = function () {
+        //TODO: implement valeq
+    },
+
+    //: ### novaleq
+    novaleq = function () {
+        //TODO: implement novaleq
     },
 
     //: ### truthy
     //: returns `true` for any value that is not:
-    //: `false`, `"false"` (false in quotes),
-    //: `0` (zero), `"0"` (zero in quotes),
-    //: `null`, `undefined`, `NaN`,
-    //: `""` (empty string), `"off"`, `"no"`
+    //:   - `false`,
+    //:   - `"false"` (false in quotes),
+    //:   - `0` (zero),
+    //:   - `"0"` (zero in quotes),
+    //:   - `null`,
+    //:   - `undefined`,
+    //:   - `NaN`,
+    //:   - `""` (empty string),
+    //:   - `"off"`,
+    //:   - `"no"`
+    //:
     //: and returns `false` otherwise
 
     truthy = function (value) {
@@ -171,10 +188,17 @@
 
     //: ### falsy
     //: returns `true` for any value that is:
-    //: `false`, `"false"` (false in quotes),
-    //: `0` (zero), `"0"` (zero in quotes),
-    //: `null`, `undefined`, `NaN`,
-    //: `""` (empty string), `"off"`, `"no"`
+    //:   - `false`,
+    //:   - `"false"` (false in quotes),
+    //:   - `0` (zero),
+    //:   - `"0"` (zero in quotes),
+    //:   - `null`,
+    //:   - `undefined`,
+    //:   - `NaN`,
+    //:   - `""` (empty string),
+    //:   - `"off"`,
+    //:   - `"no"`
+    //:
     //: and returns `false` otherwise
 
     falsy = function (value) {
@@ -219,6 +243,8 @@
 
     },
 
+    //: ### string
+
     string = function (value) {
 
         var i = 1, len = arguments.length;
@@ -231,6 +257,8 @@
         return nil(value) ? '' : '' + value;
 
     },
+
+    //: ### number
 
     number = function (value) {
 
@@ -250,6 +278,8 @@
 
     },
 
+    //: ### values
+
     values = function (o) {
 
         var key, values = [];
@@ -266,6 +296,8 @@
         return values;
 
     },
+
+    //: ### array
 
     array = function () {
 
@@ -291,6 +323,7 @@
 
     },
 
+    //: ## Accesesors
 
     dot = function (field) {
         return function (obj) {
@@ -328,7 +361,7 @@
     },
 
 
-    // ##
+    //: ## iterator
     iterator = function (callback, context) {
 
         var fn = callback.bind(context);
@@ -481,13 +514,27 @@
         f.curried = true;
         return f;
 
+    },
+
+    //: ### augment
+
+    augment = function () {
+        //TODO: implement augment
+        // it should actually augment an object/function with fun's properties
+        // based on a class of properties
+        // Example: fun.augment(Function.prototype).with('testers,iterator')
     }
 
     ;
 
 
-    // ## Exposed
-    // only these are accessible from the outside
+    to.string = tos;
+    is.array = isa;
+    is.number = isn;
+
+
+    //:## Exposed
+    //:only these are accessible from the outside
 
     return {
 
