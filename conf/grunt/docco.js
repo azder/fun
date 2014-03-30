@@ -7,17 +7,16 @@
 //ALWAYS
 'use strict';
 
-
 module.exports = {
 
     docs: {
 
-        src: ['<%= files.source %>/*.js'],
+        src: '<%= files.sources %>',
 
         options: {
-            output:    '<%= files.out.docco %>',
             layout:    'parallel',
-            css:       '<%= files.conf%>/docco/parallel.css',
+            output:    '<%= files.out.docco %>',
+            css:       '<%= files.conf.docco%>/parallel.css',
             languages: {
                 '.js': {
                     'name':   'javascript',
@@ -27,4 +26,5 @@ module.exports = {
             dst:       '<%= files.out.docco %>'
         }
     }
+
 };
