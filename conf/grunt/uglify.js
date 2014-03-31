@@ -10,6 +10,7 @@
 module.exports = {
 
     sources: {
+
         options: {
             sourceMap: true
         },
@@ -17,8 +18,9 @@ module.exports = {
         files: [
             {
                 expand: true,
-                src:    '<%= files.sources %>',
-                dst:    '<%= files.out.dist %>'
+                src:    '**/*.js',
+                cwd:    '<%= files.sourcedir %>',
+                dest:   '<%= files.out.dist %>'
             }
         ]
     }

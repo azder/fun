@@ -12,9 +12,8 @@ module.exports = {
     ],
 
     'dev': [
-        'docco',
-        'uglify',
-        'watch:docco'
+        'default',
+        'watch:sources'
     ]
 
 };

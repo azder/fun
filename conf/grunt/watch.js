@@ -9,9 +9,9 @@
 
 module.exports = {
 
-    docco: {
+    sources: {
         files: '<%=files.sources%>',
-        tasks: ['docco'],
+        tasks: ['docco', 'uglify'],
         event: 'change'
     }
 };
