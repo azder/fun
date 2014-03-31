@@ -7,10 +7,13 @@
 module.exports = {
 
     default: [
-        'docco'
+        'docco',
+        'uglify'
     ],
 
     'dev': [
+        'docco',
+        'uglify',
         'watch:docco'
     ]
 

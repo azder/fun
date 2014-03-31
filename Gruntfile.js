@@ -29,19 +29,28 @@ module.exports = function (grunt) {
 
         //data passed into config.
         config:         {
+
             files: {
-                base:    process.cwd(),
-                source:  '<%= files.base%>/source',
-                confdir: '<%= files.base%>/conf',
+
+                base: process.cwd(),
+
+                sourcedir: '<%= files.base%>/source',
+                sources:   '<%= files.sourcedir%>/**.js',
+
+                confdir: '<%= files.base %>/conf',
                 conf:    {
-                    docco: '<%= files.confdir%>/docco'
+                    docco: '<%= files.confdir %>/docco'
                 },
-                docs:    '<%= files.base%>/docs',
-                sources: '<%= files.source%>/**.js',
-                out:     {
-                    docco: '<%= files.docs%>/docco'
+
+                docs: '<%= files.base %>/docs',
+
+                out: {
+                    docco: '<%= files.docs %>/docco',
+                    dist:  '.'
                 }
+
             }
+
         }
 
     });
