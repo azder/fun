@@ -12,8 +12,24 @@
 <body>
 
 
-
 <script src="../source/fun.js"></script>
+
+<script>
+
+    //noinspection ThisExpressionReferencesGlobalObjectJS
+    (function (window) {
+
+        'use strict';
+
+        window.flog = function () {
+            console.log('flog()', 'arguments:', arguments, 'this:', this);
+            return arguments;
+        };
+
+    }(this))
+
+
+</script>
 
 </body>
 </html>
