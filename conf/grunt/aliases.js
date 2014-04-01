@@ -11,9 +11,13 @@ module.exports = {
         'uglify'
     ],
 
-    'dev': [
+    dev: [
         'default',
         'watch:sources'
+    ],
+
+    prepublish: [
+        'default'
     ]
 
 };
