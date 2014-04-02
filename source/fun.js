@@ -94,6 +94,14 @@
         return null === value || void 0 === value;
     },
 
+    //: ### missing
+    //: returns `true` when  `value` is `undefined`
+    //: and returns `false` for everything else
+
+    missing = function (value) {
+        return void 0 === value;
+    },
+
     //: ### ensure
     //: returns `value` if it is not nil, the `dfault` otherwise
     //: even if `undefined`
@@ -467,21 +475,6 @@
 
     },
 
-
-    is = function (value) {
-
-        return {
-            nil: function () {
-                return nil(value);
-            }
-        };
-
-    },
-
-    to = function () {
-
-    },
-
     curry = function (fn) {
 
         var args = slice(arguments, 1);
@@ -523,14 +516,29 @@
         // it should actually augment an object/function with fun's properties
         // based on a class of properties
         // Example: fun.augment(Function.prototype).with('testers,iterator')
+    }    ,
+
+    //: ## Subs
+
+    is = function (operator, value) {
+
+        return {
+            nil: function () {
+                return nil(value);
+            }
+        };
+
+    },
+
+    to = function (operator, value) {
+
+    },
+
+    eq = function (operator, value) {
+
     }
 
     ;
-
-
-    to.string = tos;
-    is.array = isa;
-    is.number = isn;
 
 
     //:## Exposed
@@ -540,40 +548,53 @@
 
         noop:  noop,
         ident: ident,
+        nil: nil,
 
-        nil:     nil,
-        streq:   streq,
-        nostreq: nostreq,
-        truthy:  truthy,
-        falsy:   falsy,
-
-        bool:   bool,
         ensure: ensure,
         empty:  empty,
-        object: object,
-        string: string,
-        number: number,
-        array:  array,
 
         dot: dot,
         nav: nav,
 
-        iterator: iterator,
-
         extend: extend,
+        mixin: mixin,
 
         switcher:  switcher,
         selector:  selector,
         stategist: noop,
         enclose:   noop,
+        augment: augment,
 
-        to: to,
-        is: is,
+        eq: mixin(eq, {
+            str:   streq,
+            nostr: nostreq,
+            val:   valeq,
+            noval: novaleq,
+        }),
+
+        to: mixin(to, {
+            bool:   bool,
+            object: object,
+            string: string,
+            number: number,
+            array:  array,
+        }),
+
+        is: mixin(is, {
+            nil:     nil,
+            missing: missing,
+            array:   isa,
+            number:  isn,
+            truthy:  truthy,
+            falsy:   falsy,
+        }),
 
 
-        curry:  curry,
-        acurry: acurry,
+        iterator: iterator,
+        curry:    curry,
+        acurry:   acurry,
 
+        tos: tos,
         slice: slice,
         owns:  owns,
 
