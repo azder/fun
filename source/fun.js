@@ -75,6 +75,11 @@
     noop = function () {
     },
 
+    //: ### unimplemented
+    unimplemented = function () {
+        throw new Error('Not implemented!');
+    },
+
     //: ### ident
     //: the identity function which only takes 1 parameter
     //: and just returns that same parameter
@@ -156,14 +161,13 @@
 
 
     //: ### valeq
-    valeq = function () {
-        //TODO: implement valeq
-    },
+    //TODO: implement valeq
+    valeq = unimplemented,
 
     //: ### novaleq
-    novaleq = function () {
-        //TODO: implement novaleq
-    },
+    //TODO: implement novaleq
+    novaleq = unimplemented,
+
 
     //: ### truthy
     //: returns `true` for any value that is not:
@@ -408,6 +412,9 @@
 
     },
 
+    //: ## mixin
+    //: **Note:** overwrites the values of the preceding objects' fields if found in the following ones
+
     mixin = function () {
 
         var key, i, arg, args = slice(arguments), obj = args.shift(), len = args.length;
@@ -430,9 +437,18 @@
 
     },
 
-    extend = function () {
+    //: ## enclose
+    //: captures the value in a context
+    //: to be used by the provided functions
+    //TODO: implement enclose
+    enclose = unimplemented,
 
-    },
+    //: ## extend
+    //: like `mixin` only difference is preserving already present values
+    //TODO: implement extend
+    extend = unimplemented,
+
+    //: ## switcher
 
     switcher = function (map) {
 
@@ -443,6 +459,9 @@
         };
 
     },
+
+
+    //: ## selector
 
     selector = function (map) {
 
@@ -476,6 +495,10 @@
 
 
     },
+
+    //: ## strategist
+    //TODO: implement strategist
+    strategist = unimplemented,
 
     curry = function (fn) {
 
@@ -533,6 +556,8 @@
 
         }
 
+        //TODO: use enclose
+
         return {
             nil: function () {
                 return nil(value);
@@ -559,7 +584,7 @@
 
         noop:  noop,
         ident: ident,
-        nil: nil,
+        nil:   nil,
 
         elvis: elvis,
         empty: empty,
@@ -568,13 +593,13 @@
         nav: nav,
 
         extend: extend,
-        mixin: mixin,
+        mixin:  mixin,
 
-        switcher: switcher,
-        selector: selector,
+        switcher:  switcher,
+        selector:  selector,
+        strategist: strategist,
 
-        stategist: noop,
-        enclose:   noop,
+        enclose: enclose,
 
         augment: augment,
 
