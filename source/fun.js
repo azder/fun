@@ -40,8 +40,6 @@
     // ALWAYS
     'use strict';
 
-    //: ## var
-    //: start of all the definitions
     var
 
     //: ## "Imports"

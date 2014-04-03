@@ -1,5 +1,5 @@
 /**
- * Created by azder on 2014-04-01.
+ * Created by azder on 2014-04-03.
  */
 
 /*globals, describe, it, beforeEach*/
@@ -33,24 +33,23 @@
 
     var expect = chai.expect;
 
-    describe('subnamespace', function () {
+    describe('subnamespace "is" ', function () {
 
-        ['eq', 'is', 'to'].forEach(function (name) {
+        var is = fun.is;
 
-            describe(name, function () {
+        ['nil', 'missing', 'array', 'number', 'truthy', 'falsy' ].forEach(function (name) {
 
-                it('should exist at the top namespace', function () {
-                    expect(fun).to.have.a.property(name);
-                });
 
-                it('should be a function', function () {
-                    expect(fun[name]).to.be.a('function');
-                });
-
+            it('should have property "' + name + '"', function () {
+                expect(is).to.have.a.property(name);
             });
 
-        });
+            it('"' + name + '" should be a function', function () {
+                expect(is[name]).to.be.a('function');
+            });
 
+
+        });
 
     });
 
