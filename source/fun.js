@@ -102,18 +102,19 @@
         return void 0 === value;
     },
 
-    //: ### ensure
-    //: returns `value` if it is not nil, the `dfault` otherwise
-    //: even if `undefined`
+    //: ### elvis
+    //: returns `value` if it is `null` or `undefined`, the `dfault` otherwise
+    //:
+    //: **Note:** if `dfault` is returned, the result can still be `null` or `undefined`
 
-    ensure = function (value, dfault) {
+    elvis = function (value, dfault) {
         return nil(value) ? dfault : value;
     },
 
     //: ### empty
     //: returns a prototypless empty object
     //: i.e. _not even_ `Object` is in it's prototype chain
-
+    //:
     //:  **Note:** requires support of `Object.create` (ES5 standard)
     //: to guarantee there will be no implicit `Object` in prototype
 
@@ -126,8 +127,11 @@
 
     //: ### isa
     //: returns `true` when `value` is an `Array`, `false` otherwise
+    //:
+    //: **Note:** requires support of `Array.isArray` (ES5 standard)
+    //: to guarantee that all edge cases are covered
 
-    isa = ensure(Array.isArray, function (value) {
+    isa = elvis(Array.isArray, function (value) {
         return tos(value) === '[object Array]';
     }),
 
@@ -437,7 +441,7 @@
         map = object(map);
 
         return function (key) {
-            return ensure(map[string(key)], map['']);
+            return elvis(map[string(key)], map['']);
         };
 
     },
@@ -485,7 +489,7 @@
 
     acurry = function (fn, argn) {
 
-        fn = ensure(fn, noop);
+        fn = elvis(fn, noop);
         argn = number(argn, fn.length);
 
         var f = function () {
@@ -522,6 +526,15 @@
 
     is = function (operator, value) {
 
+        if (missing(value)) {
+
+            if (!nil(operator)) {
+                return curry(is, operator);
+            }
+
+
+        }
+
         return {
             nil: function () {
                 return nil(value);
@@ -550,8 +563,8 @@
         ident: ident,
         nil: nil,
 
-        ensure: ensure,
-        empty:  empty,
+        elvis: elvis,
+        empty: empty,
 
         dot: dot,
         nav: nav,
@@ -559,11 +572,26 @@
         extend: extend,
         mixin: mixin,
 
-        switcher:  switcher,
-        selector:  selector,
+        switcher: switcher,
+        selector: selector,
+
         stategist: noop,
         enclose:   noop,
+
         augment: augment,
+
+        iterator: iterator,
+
+        curry:  curry,
+        acurry: acurry,
+
+        tos:   tos,
+        slice: slice,
+        owns:  owns,
+
+        cbind: cbind,
+        abind: abind,
+
 
         eq: mixin(eq, {
             str:   streq,
@@ -587,19 +615,7 @@
             number:  isn,
             truthy:  truthy,
             falsy:   falsy,
-        }),
-
-
-        iterator: iterator,
-        curry:    curry,
-        acurry:   acurry,
-
-        tos: tos,
-        slice: slice,
-        owns:  owns,
-
-        cbind: cbind,
-        abind: abind
+        })
 
     };
 
