@@ -42,6 +42,16 @@
 
     var
 
+    fun = function () {
+
+        if (!(this instanceof fun)) {
+            return new fun();
+        }
+
+        return this;
+
+    },
+
     //: ## "Imports"
 
     OP = Object.prototype,
@@ -87,7 +97,6 @@
     ident = function (value) {
         return value;
     },
-
 
     //: ### nil
     //: returns `true` when  `value` is either `null` or `undefined`
@@ -500,6 +509,29 @@
     //TODO: implement strategist
     strategist = unimplemented,
 
+    //: ### compose
+    //: composes multiple functions into one
+
+    compose = function () {
+
+        var functions = slice(arguments), len = functions.length;
+
+        return function () {
+
+            var args = slice(arguments), i = len;
+
+            while (i > 0) {
+                i -= 1;
+                console.log(i ,this, functions[i]);
+                args = [functions[i].apply(this, args)];
+            }
+
+            return args[0];
+
+        };
+
+    },
+
     curry = function (fn) {
 
         var args = slice(arguments, 1);
@@ -534,7 +566,7 @@
 
     },
 
-    //: ### augment
+        //: ### augment
 
     augment = function () {
         //TODO: implement augment
@@ -543,7 +575,7 @@
         // Example: fun.augment(Function.prototype).with('testers,iterator')
     }    ,
 
-    //: ## Subs
+        //: ## Subs
 
     is = function (operator, value) {
 
@@ -580,7 +612,9 @@
     //:## Exposed
     //:only these are accessible from the outside
 
-    return {
+    fun.fn = fun.prototype = mixin(empty(), {
+
+        constructor: fun,
 
         noop:  noop,
         ident: ident,
@@ -595,8 +629,8 @@
         extend: extend,
         mixin:  mixin,
 
-        switcher:  switcher,
-        selector:  selector,
+        switcher:   switcher,
+        selector:   selector,
         strategist: strategist,
 
         enclose: enclose,
@@ -604,6 +638,8 @@
         augment: augment,
 
         iterator: iterator,
+
+        compose: compose,
 
         curry:  curry,
         acurry: acurry,
@@ -640,6 +676,10 @@
             falsy:   falsy,
         })
 
-    };
+    });
+
+    mixin(fun, fun.fn);
+
+    return fun();
 
 }));
