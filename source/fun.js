@@ -277,7 +277,15 @@
             i += 1;
         }
 
-        return nil(value) ? '' : '' + value;
+        if (nil(value)) {
+            return '';
+        }
+
+        try {
+            return '' + value;
+        } catch (e) {
+            return tos(value);
+        }
 
     },
 
@@ -348,11 +356,16 @@
 
     //: ## Accesesors
 
+    //: ### dot
+
     dot = function (field) {
         return function (obj) {
             return object(obj)[field];
         };
     },
+
+
+    //: ### nav
 
     nav = function (path) {
 
@@ -385,6 +398,7 @@
 
 
     //: ## iterator
+
     iterator = function (callback, context) {
 
         var fn = callback.bind(context);
@@ -522,7 +536,6 @@
 
             while (i > 0) {
                 i -= 1;
-                console.log(i ,this, functions[i]);
                 args = [functions[i].apply(this, args)];
             }
 
@@ -566,7 +579,7 @@
 
     },
 
-        //: ### augment
+    //: ### augment
 
     augment = function () {
         //TODO: implement augment
@@ -575,7 +588,7 @@
         // Example: fun.augment(Function.prototype).with('testers,iterator')
     }    ,
 
-        //: ## Subs
+    //: ## Subs
 
     is = function (operator, value) {
 
