@@ -40,9 +40,8 @@
     // ALWAYS
     'use strict';
 
-    var
 
-    fun = function () {
+    function fun() {
 
         if (!(this instanceof fun)) {
             return new fun();
@@ -50,7 +49,10 @@
 
         return this;
 
-    },
+    };
+
+
+    var
 
     //: ## "Imports"
 
