@@ -12,7 +12,6 @@ module.exports = {
     ],
 
     dev: [
-        'default',
         'watch:sources'
     ],
 

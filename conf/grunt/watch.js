@@ -10,8 +10,11 @@
 module.exports = {
 
     sources: {
-        files: '<%=files.sources%>',
-        tasks: ['docco', 'uglify'],
-        event: 'change'
+        files:   '<%=files.sources%>',
+        tasks:   ['docco', 'uglify'],
+        event:   'change',
+        options: {
+            atBegin: true
+        }
     }
 };
