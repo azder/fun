@@ -1,0 +1,24 @@
+{
+    "name":        "funjs",
+    "main":        "fun.js",
+    "version":     "0.3.0",
+    "homepage":    "https://github.com/azder/fun",
+    "authors":     [
+        "azder <azhder@gmail.com>"
+    ],
+    "description": "The fun to play with functional suplement for JS",
+    "keywords":    [
+        "fun",
+        "fun.js",
+        "functional",
+        "library"
+    ],
+    "license":     "LGPLv3",
+    "ignore":      [
+        "**/.*",
+        "node_modules",
+        "bower-components",
+        "bower_components",
+        "test"
+    ]
+}
