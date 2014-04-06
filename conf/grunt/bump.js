@@ -12,10 +12,10 @@ module.exports = {
     options: {
         files:              ['package.json', 'bower.json'],
         updateConfigs:      [],
-        commit:             false,
+        commit:             true,
         commitMessage:      'bump to version %VERSION%',
         commitFiles:        ['package.json'], // '-a' for all files
-        createTag:          true,
+        createTag:          false,
         tagName:            '%VERSION%',
         tagMessage:         'version %VERSION%',
         push:               false,
