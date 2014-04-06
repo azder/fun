@@ -17,7 +17,7 @@ module.exports = {
     ],
 
     prepublish: [
-        'default'
+        'default', 'bump:build'
     ]
 
 };
