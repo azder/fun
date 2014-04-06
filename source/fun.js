@@ -132,11 +132,11 @@
     //:  **Note:** requires support of `Object.create` (ES5 standard)
     //: to guarantee there will be no implicit `Object` in prototype
 
-    empty = Object.create ? function () {
+    empty = (Object.create ? function () {
         return Object.create(null);
     } : function () {
         return {};
-    },
+    }),
 
 
     //: ### isa
@@ -310,6 +310,44 @@
         return 0;
 
     },
+
+    //: ### keys
+
+    keys = ( Object.keys ? function (o) {
+
+        var keys = [], props;
+
+        if (nil(o)) {
+            return k;
+        }
+
+        if (o !== Object(o)) {
+            return k;
+        }
+
+        return Object.keys(o);
+
+    } : function (o) {
+
+        var keys = [], props;
+
+        if (nil(o)) {
+            return k;
+        }
+
+        if (o !== Object(o)) {
+            return k;
+        }
+
+        for (props in o) {
+            if (owns(o, props)) {
+                keys.push(props);
+            }
+        }
+
+        return keys;
+
+    }),
 
     //: ### values
 
@@ -602,7 +640,7 @@
 
     //: ### augment
 
-    augment = function () {
+    augment = function (string, o) {
         //TODO: implement augment
         // it should actually augment an object/function with fun's properties
         // based on a class of properties
@@ -638,7 +676,12 @@
 
     eq = function (operator, value) {
 
+    },
+
+    fx = function (operator, value) {
+
     }
+
 
     ;
 
@@ -646,7 +689,7 @@
     //:## Exposed
     //:only these are accessible from the outside
 
-    fun.fn = fun.prototype = mixin(empty(), {
+    fun.fn = fun.prototype = mixin(fun, {
 
         constructor: fun,
 
@@ -703,6 +746,8 @@
             string: string,
             number: number,
             array:  array,
+            values: values,
+            keys:   keys
         }),
 
         is: mixin(is, {
@@ -716,8 +761,6 @@
 
     });
 
-    mixin(fun, fun.fn);
-
-    return fun();
+    return fun;
 
 }));
