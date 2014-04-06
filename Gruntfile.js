@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 
         // pass options to load-grunt-tasks. false disables loading tasks.
         loadGruntTasks: {
-            pattern: ['*', '!load-grunt-config'],
+            pattern: ['*', '!load-grunt-config', '!chai', '!mocha'],
             config:  require('./package.json'),
             scope:   'devDependencies'
         },
