@@ -17,16 +17,44 @@
 <script>
 
     //noinspection ThisExpressionReferencesGlobalObjectJS
-    (function (window) {
+    (function (window, fun) {
 
         'use strict';
 
-        window.flog = function () {
-            console.log('flog()', 'arguments:', arguments, 'this:', this);
-            return arguments;
-        };
+        var object = fun.to.object;
 
-    }(this))
+        //noinspection JSUnusedGlobalSymbols
+        fun.mixin(window, {
+
+            flog: function () {
+                console.log('flog()', 'arguments:', arguments, 'this:', this);
+                return arguments;
+            },
+
+            fa1: function (a) {
+                return a + 1;
+            },
+
+            fm2: function (m) {
+                return m * 2;
+            },
+
+            oa2: function (args) {
+                args = object(args);
+                args.add = args.a + args.b;
+                return args;
+            },
+
+            om2: function (args) {
+                args = object(args);
+                args.mul = args.a * args.b;
+                return  args;
+            }
+
+        }, fun.fn);
+
+
+    }(this, fun))
 
 
 </script>

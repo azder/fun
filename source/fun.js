@@ -568,20 +568,52 @@
 
     compose = function () {
 
-        var functions = slice(arguments), len = functions.length;
+        var functions = slice(arguments), len = functions.length, fn;
 
-        return function () {
+        fn = function () {
 
-            var args = slice(arguments), i = len;
+            var args = slice(arguments);
 
-            while (i > 0) {
-                i -= 1;
-                args = [functions[i].apply(this, args)];
+            while (0 < len) {
+                len -= 1;
+                args = [functions[len].apply(this, args)];
             }
 
             return args[0];
 
         };
+
+        fn.toString = function () {
+            return 'compose(' + functions + ')';
+        };
+
+        return fn;
+
+    },
+
+    //: ### compose
+    //: composes multiple functions into one
+
+    ocompose = function () {
+
+        var functions = slice(arguments), len = functions.length, fn;
+
+        fn = function (o) {
+
+            while (0 < len) {
+                len -= 1;
+                o = functions[len].call(this, o);
+            }
+
+            return o;
+
+        };
+
+        fn.toString = function () {
+            return 'ocompose(' + functions + ')';
+        };
+
+        return fn;
 
     },
 
@@ -714,7 +746,8 @@
 
         iterator: iterator,
 
-        compose: compose,
+        compose:  compose,
+        ocompose: ocompose,
 
         curry:  curry,
         acurry: acurry,
