@@ -545,6 +545,23 @@
 
     },
 
+    //: ### y
+    //: the Y combinator, because Y not?
+
+    y = function (le) {
+        return (function (f) {
+            return f(f);
+        }(
+        function (g) {
+            return le(function (x) {
+                return g(g)(x);
+            });
+        })
+        );
+    },
+
+    //: ### curry
+
     curry = function (fn) {
 
         var args = slice(arguments, 1);
@@ -552,6 +569,8 @@
             return fn.apply(this, args.concat(slice(arguments)));
         };
     },
+
+    //: ### acurry
 
     acurry = function (fn, argn) {
 
@@ -629,9 +648,7 @@
 
         constructor: fun,
 
-        noop:  noop,
-        ident: ident,
-        nil:   nil,
+        nil: nil,
 
         elvis: elvis,
         empty: empty,
@@ -664,6 +681,12 @@
         cbind: cbind,
         abind: abind,
 
+
+        fx: mixin(fx, {
+            noop:  noop,
+            ident: ident,
+            y:     y
+        }),
 
         eq: mixin(eq, {
             str:   streq,
