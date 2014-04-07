@@ -129,7 +129,8 @@
     //: returns a prototypless empty object
     //: i.e. _not even_ `Object` is in it's prototype chain
     //:
-    //:  **Note:** requires support of `Object.create` (ES5 standard)
+    //:  **Note:** requires support of `Object.create`
+    //: (ES5 standard, supported by these [browsers](http://kangax.github.io/es5-compat-table/#Object.create))
     //: to guarantee there will be no implicit `Object` in prototype
 
     empty = (Object.create ? function () {
@@ -312,6 +313,7 @@
     },
 
     //: ### keys
+    //: it uses Object.keys [if supported](http://kangax.github.io/es5-compat-table/#Object.keys)
 
     keys = ( Object.keys ? function (o) {
 
@@ -445,7 +447,7 @@
 
         return function (object) {
 
-            var length, i;
+            var length, index;
 
             if (nil(object) || nil(callback)) {
                 return object;
@@ -454,17 +456,17 @@
             length = object.length;
 
             if (!isn(length)) {
-                for (i in object) {
+                for (index in object) {
                     //noinspection JSUnfilteredForInLoop
-                    if (owns(object, i) && null === fn(object[i], i, object)) {
+                    if (owns(object, index) && null === fn(object[index], index, object)) {
                         return object;
                     }
                 }
                 return object;
             }
 
-            for (i = 0; i < length; i += 1) {
-                if (null === fn(object[i], i, object)) {
+            for (index = 0; index < length; index += 1) {
+                if (null === fn(object[index], index, object)) {
                     return object;
                 }
             }
@@ -563,10 +565,10 @@
     //TODO: implement strategist
     strategist = unimplemented,
 
-    //: ### compose
+    //: ### acomp
     //: composes multiple functions into one
 
-    compose = function () {
+    acomp = function () {
 
         var functions = slice(arguments), len = functions.length, fn;
 
@@ -576,7 +578,7 @@
 
             while (0 < len) {
                 len -= 1;
-                args = [functions[len].apply(this, args)];
+                args = array(functions[len].apply(this, args));
             }
 
             return args[0];
@@ -584,17 +586,17 @@
         };
 
         fn.toString = function () {
-            return 'compose(' + functions + ')';
+            return 'acomp(' + functions + ')';
         };
 
         return fn;
 
     },
 
-    //: ### compose
+    //: ### ocomp
     //: composes multiple functions into one
 
-    ocompose = function () {
+    ocomp = function () {
 
         var functions = slice(arguments), len = functions.length, fn;
 
@@ -610,7 +612,7 @@
         };
 
         fn.toString = function () {
-            return 'ocompose(' + functions + ')';
+            return 'ocomp(' + functions + ')';
         };
 
         return fn;
@@ -725,8 +727,11 @@
 
         constructor: fun,
 
-        nil: nil,
+        tos:   tos,
+        slice: slice,
+        owns:  owns,
 
+        nil:   nil,
         elvis: elvis,
         empty: empty,
 
@@ -744,17 +749,11 @@
 
         augment: augment,
 
+        compose:  ocomp,
         iterator: iterator,
-
-        compose:  compose,
-        ocompose: ocompose,
 
         curry:  curry,
         acurry: acurry,
-
-        tos:   tos,
-        slice: slice,
-        owns:  owns,
 
         cbind: cbind,
         abind: abind,
@@ -763,6 +762,8 @@
         fx: mixin(fx, {
             noop:  noop,
             ident: ident,
+            acomp: acomp,
+            ocomp: ocomp,
             y:     y
         }),
 

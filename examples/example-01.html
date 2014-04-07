@@ -21,10 +21,11 @@
 
         'use strict';
 
-        var object = fun.to.object;
+        var mixin = fun.mixin, object = fun.to.object, keys = fun.to.keys, x = {};
+
 
         //noinspection JSUnusedGlobalSymbols
-        fun.mixin(window, {
+        mixin(x, {
 
             flog: function () {
                 console.log('flog()', 'arguments:', arguments, 'this:', this);
@@ -49,9 +50,17 @@
                 args = object(args);
                 args.mul = args.a * args.b;
                 return  args;
-            }
+            },
 
-        }, fun.fn);
+            composed1: fun.compose(fun.iterator(console.log, console), keys, x.oa2, x.om2),
+            composed2: fun.compose(fun.abind(console.log, console), keys, x.oa2, x.om2),
+
+            value1: ({a: 2, b: 3})
+
+        });
+
+        //noinspection JSUnusedGlobalSymbols
+        fun.mixin(window, x, fun.fn);
 
 
     }(this, fun))
