@@ -472,6 +472,44 @@
 
     },
 
+    //: ## mapper
+
+    mapper = function (callback, context) {
+
+        var fn = callback.bind(context);
+
+        return function (object) {
+
+            var length, index, mapped = [];
+
+            if (nil(object) || nil(callback)) {
+                return mapped;
+            }
+
+            length = object.length;
+
+            if (!isn(length)) {
+                mapped = {};
+                for (index in object) {
+                    //noinspection JSUnfilteredForInLoop
+                    if (!owns(object, index)) {
+                        continue;
+                    }
+                    mapped[index] = fn(object[index], index, object);
+                }
+                return mapped;
+            }
+
+            for (index = 0; index < length; index += 1) {
+                mapped.push(fn(object[index], index, object));
+            }
+
+            return mapped;
+
+        };
+
+    },
+
     //: ## mixin
     //: **Note:** overwrites the values of the preceding objects' fields if found in the following ones
 
@@ -648,7 +686,7 @@
         };
 
         par.toString = function () {
-            return fn.toString();
+            return '//fixargs: [' + fixed + ']\n' + fn.toString();
         }
 
         return par;
@@ -712,27 +750,17 @@
 
     enclose = function (applier, functions) {
 
-        var functs = empty(), func;
-
         functions = object(functions);
 
-        func = function () {
+        return function () {
 
             var args = slice(arguments);
 
-            iterator(function (fn, name) {
-                functs[name] = applier.apply(this, [fn].concat(args));
+            return mapper(function (fn, name) {
+                return applier.apply(this, [fn].concat(args));
             })(functions);
 
-//            addtos(functs, function () {
-//                return '//fixargs: [' + args + ']\n';// + functs.toString();
-//            });
-
-            return functs
-
         };
-
-        return func;
 
     },
 
@@ -804,6 +832,7 @@
 
         compose:  ocomp,
         iterator: iterator,
+        mapper:   mapper,
 
         curry:  curry,
         acurry: acurry,
@@ -819,14 +848,17 @@
         }),
 
         fx: sub({
-            noop:    noop,
-            ident:   ident,
-            acomp:   acomp,
-            ocomp:   ocomp,
-            y:       y,
-            curry:   curry,
-            acurry:  acurry,
-            partial: partial
+            noop:      noop,
+            ident:     ident,
+            acomp:     acomp,
+            ocomp:     ocomp,
+            y:         y,
+            curry:     curry,
+            acurry:    acurry,
+            partial:   partial,
+            enclose:   enclose,
+            encurry:   encurry,
+            enpartial: enpartial
         }),
 
         to: sub({
