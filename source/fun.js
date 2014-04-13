@@ -125,6 +125,29 @@
         return nil(value) ? dfault : value;
     },
 
+    //: ### addtos
+
+    addtos = Object.defineProperty ? function (o) {
+
+        return Object.defineProperty(o, 'toString', {
+            enumerable:   false,
+            configurable: true,
+            writable:     true,
+            value:        tos.bind(o)
+        });
+
+    } : function (o) {
+
+        if (o.prototype) {
+            o = prototype;
+        }
+
+        o.toString = tos.bind(o);
+
+        return o;
+
+    },
+
     //: ### empty
     //: returns a prototypless empty object
     //: i.e. _not even_ `Object` is in it's prototype chain
@@ -134,7 +157,7 @@
     //: to guarantee there will be no implicit `Object` in prototype
 
     empty = (Object.create ? function () {
-        return Object.create(null);
+        return addtos(Object.create(null));
     } : function () {
         return {};
     }),
@@ -161,14 +184,14 @@
     //: returns `true` when `value1` and `value2` converted to strings  are equal, `false` otherwise
 
     streq = function (value1, value2) {
-        return tos(value1) === tos(value2);
+        return ('' + value1) === ('' + value2);
     },
 
     //: ### nostreq
     //: returns `true` when `value1` and `value2` converted to strings are not equal, `false` otherwise
 
     nostreq = function (value1, value2) {
-        return tos(value1) !== tos(value2);
+        return ('' + value1) !== ('' + value2);
     },
 
 
@@ -317,7 +340,7 @@
 
     keys = ( Object.keys ? function (o) {
 
-        var keys = [], props;
+        var k = [], props;
 
         if (nil(o)) {
             return k;
@@ -331,7 +354,7 @@
 
     } : function (o) {
 
-        var keys = [], props;
+        var k = [], props;
 
         if (nil(o)) {
             return k;
@@ -343,11 +366,11 @@
 
         for (props in o) {
             if (owns(o, props)) {
-                keys.push(props);
+                k.push(props);
             }
         }
 
-        return keys;
+        return k;
 
     }),
 
@@ -502,12 +525,6 @@
 
     },
 
-    //: ## enclose
-    //: captures the value in a context
-    //: to be used by the provided functions
-    //TODO: implement enclose
-    enclose = unimplemented,
-
     //: ## extend
     //: like `mixin` only difference is preserving already present values
     //TODO: implement extend
@@ -634,14 +651,58 @@
         );
     },
 
+
+    //: ### partial
+
+    partial = function (fn) {
+
+        var fixed, par;
+
+        fn = elvis(fn, noop)
+        fixed = slice(arguments, 1);
+
+        par = function () {
+
+            var i, args = slice(fixed), supplied = slice(arguments), len = args.length;
+
+            for (i = 0; i < len; i += 1) {
+                if (missing(args[i])) {
+                    args[i] = supplied.shift();
+                }
+            }
+
+            return fn.apply(this, args.concat(supplied));
+
+        };
+
+        par.toString = function () {
+            return fn.toString();
+        }
+
+        return par;
+
+    },
+
     //: ### curry
 
     curry = function (fn) {
 
-        var args = slice(arguments, 1);
-        return function () {
+        var cur, args;
+
+        fn = elvis(fn, noop);
+        args = slice(arguments, 1);
+
+        cur = function () {
             return fn.apply(this, args.concat(slice(arguments)));
         };
+
+        cur.toString = function () {
+            return '//fixargs: [' + args + ']\n' + fn.toString();
+        };
+
+        return cur;
+
+
     },
 
     //: ### acurry
@@ -672,6 +733,52 @@
 
     },
 
+    //: ## enclose
+    //: generates a function that
+    //: captures the arguments in a context by a supplied applier method
+    //: to be used by the provided functions
+
+    enclose = function (applier, functions) {
+
+        var functs = empty(), func;
+
+        functions = object(functions);
+
+        func = function () {
+
+            var args = slice(arguments);
+
+            iterator(function (fn, name) {
+                functs[name] = applier.apply(this, [fn].concat(args));
+            })(functions);
+
+//            addtos(functs, function () {
+//                return '//fixargs: [' + args + ']\n';// + functs.toString();
+//            });
+
+            return functs
+
+        };
+
+        return func;
+
+    },
+
+    //: ## encurry
+    //: generates a function that
+    //: captures the arguments in a context by the curry method
+    //: to be used by the provided functions
+
+    encurry = curry(enclose, curry),
+
+    //: ## enpartial
+    //: generates a function that
+    //: captures the arguments in a context by the partial method
+    //: to be used by the provided functions
+
+    enpartial = curry(enclose, partial),
+
+
     //: ### augment
 
     augment = function (string, o) {
@@ -681,39 +788,12 @@
         // Example: fun.augment(Function.prototype).with('testers,iterator')
     }    ,
 
-    //: ## Subs
 
-    is = function (operator, value) {
+    //: ### sub
+    //: create a sub-namespace out of the provided functions
 
-        if (missing(value)) {
-
-            if (!nil(operator)) {
-                return curry(is, operator);
-            }
-
-
-        }
-
-        //TODO: use enclose
-
-        return {
-            nil: function () {
-                return nil(value);
-            }
-        };
-
-    },
-
-    to = function (operator, value) {
-
-    },
-
-    eq = function (operator, value) {
-
-    },
-
-    fx = function (operator, value) {
-
+    sub = function (functions) {
+        return mixin(encurry(functions), functions);
     }
 
 
@@ -727,9 +807,10 @@
 
         constructor: fun,
 
-        tos:   tos,
-        slice: slice,
-        owns:  owns,
+        tos:    tos,
+        slice:  slice,
+        owns:   owns,
+        addtos: addtos,
 
         nil:   nil,
         elvis: elvis,
@@ -745,7 +826,7 @@
         selector:   selector,
         strategist: strategist,
 
-        enclose: enclose,
+        enclose: encurry,
 
         augment: augment,
 
@@ -758,23 +839,25 @@
         cbind: cbind,
         abind: abind,
 
-
-        fx: mixin(fx, {
-            noop:  noop,
-            ident: ident,
-            acomp: acomp,
-            ocomp: ocomp,
-            y:     y
-        }),
-
-        eq: mixin(eq, {
+        eq: sub({
             str:   streq,
             nostr: nostreq,
             val:   valeq,
             noval: novaleq,
         }),
 
-        to: mixin(to, {
+        fx: sub({
+            noop:    noop,
+            ident:   ident,
+            acomp:   acomp,
+            ocomp:   ocomp,
+            y:       y,
+            curry:   curry,
+            acurry:  acurry,
+            partial: partial
+        }),
+
+        to: sub({
             bool:   bool,
             object: object,
             string: string,
@@ -784,7 +867,7 @@
             keys:   keys
         }),
 
-        is: mixin(is, {
+        is: sub({
             nil:     nil,
             missing: missing,
             array:   isa,
@@ -797,4 +880,6 @@
 
     return fun;
 
-}));
+}
+))
+;
