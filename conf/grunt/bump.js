@@ -4,23 +4,27 @@
 
 /*jshint node:true*/
 
-//ALWAYS
-'use strict';
+module.exports = function (grunt) {
 
-module.exports = {
+    //ALWAYS
+    'use strict';
 
-    options: {
-        files:              ['package.json', 'bower.json'],
-        updateConfigs:      [],
-        commit:             true,
-        commitMessage:      'bump to version %VERSION%',
-        commitFiles:        ['package.json'], // '-a' for all files
-        createTag:          false,
-        tagName:            '%VERSION%',
-        tagMessage:         'version %VERSION%',
-        push:               false,
-        pushTo:             'upstream',
-        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
-    }
+    var files = ['package.json', 'bower.json'];
+
+    return {
+        options: {
+            files:              files,
+            commitFiles:        files, // '-a' for all files
+            updateConfigs:      [],
+            commit:             false,
+            commitMessage:      'bump to version %VERSION%',
+            createTag:          false,
+            tagName:            '%VERSION%',
+            tagMessage:         'version %VERSION%',
+            push:               false,
+            pushTo:             'upstream',
+            gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
+        }
+    };
 
 };
