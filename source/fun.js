@@ -3,6 +3,8 @@
 //: The fun to play with functional supplement for JS
 //: Created by Azder [(azhder@gmail.com)](mailto:azhder@gmail.com) on 2014-03-05.
 
+//: **Note**: Requires support of ES5.1, you can check the [compatibility table](http://kangax.github.io/es5-compat-table/)
+
 //noinspection ThisExpressionReferencesGlobalObjectJS
 (function (G, factory) {
 
@@ -126,8 +128,10 @@
     },
 
     //: ### addtos
+    //:  **Note:** requires support of `Object.defineProperty`
+    //: (ES5 standard, supported by these [browsers](http://kangax.github.io/es5-compat-table/#Object.defineProperty))
 
-    addtos = Object.defineProperty ? function (o) {
+    addtos = function (o) {
 
         return Object.defineProperty(o, 'toString', {
             enumerable:   false,
@@ -135,16 +139,6 @@
             writable:     true,
             value:        tos.bind(o)
         });
-
-    } : function (o) {
-
-        if (o.prototype) {
-            o = prototype;
-        }
-
-        o.toString = tos.bind(o);
-
-        return o;
 
     },
 
@@ -154,13 +148,10 @@
     //:
     //:  **Note:** requires support of `Object.create`
     //: (ES5 standard, supported by these [browsers](http://kangax.github.io/es5-compat-table/#Object.create))
-    //: to guarantee there will be no implicit `Object` in prototype
 
-    empty = (Object.create ? function () {
-        return addtos(Object.create(null));
-    } : function () {
-        return {};
-    }),
+    empty = function (options) {
+        return options && false === options.tos ? Object.create(null) : addtos(Object.create(null));
+    },
 
 
     //: ### isa
@@ -336,9 +327,10 @@
     },
 
     //: ### keys
-    //: it uses Object.keys [if supported](http://kangax.github.io/es5-compat-table/#Object.keys)
+    //:  **Note:** requires support of `Object.keys`
+    //: (ES5 standard, supported by these [browsers](http://kangax.github.io/es5-compat-table/#Object.keys))
 
-    keys = ( Object.keys ? function (o) {
+    keys = function (o) {
 
         var k = [], props;
 
@@ -352,27 +344,7 @@
 
         return Object.keys(o);
 
-    } : function (o) {
-
-        var k = [], props;
-
-        if (nil(o)) {
-            return k;
-        }
-
-        if (o !== Object(o)) {
-            return k;
-        }
-
-        for (props in o) {
-            if (owns(o, props)) {
-                k.push(props);
-            }
-        }
-
-        return k;
-
-    }),
+    },
 
     //: ### values
 
