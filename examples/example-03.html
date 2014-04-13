@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Example 31</title>
+
+
+</head>
+
+<body>
+
+<pre id="con">
+
+</pre>
+
+<script src="../source/fun.js"></script>
+
+<script>
+
+    //noinspection ThisExpressionReferencesGlobalObjectJS
+    (function (window, fun) {
+
+        'use strict';
+
+        var mixin = fun.mixin, object = fun.to.object, keys = fun.to.keys, x = {};
+
+
+        //noinspection JSUnusedGlobalSymbols
+        mixin(x, {
+
+            calc: function (value1, operator, value2) {
+
+                if ('plus' === operator || '+' === operator) {
+                    return value1 + value2;
+                }
+
+                if ('minus' === operator || '-' === operator) {
+                    return value1 - value2;
+                }
+
+                if ('multiply' === operator || 'multiply by' === operator || '*' === operator) {
+                    return value1 * value2;
+                }
+
+                if ('divide' === operator || 'divide with' === operator || '/' === operator) {
+                    return value1 / value2;
+                }
+
+                return NaN;
+
+            }
+
+        });
+
+        //noinspection JSUnusedGlobalSymbols
+        fun.mixin(window, x, fun.fn);
+
+
+    }(this, fun));
+
+    var calc, fx, switcher, to, opsto, mapper;
+
+    var con = document.getElementById('con');
+    var log = function () {
+        var args = slice(arguments);
+        con.innerHTML = con.innerHTML + args.join(' , ') + '\n';
+        console.log.apply(console, args);
+    };
+
+    //////////////////
+
+    log(calc());                        // NaN
+    log(calc(1, '+', 2));               // 3
+    log(calc(1, 'minus', 2));           // -1
+    log(calc(2, 'multiply by', 2));     // 4
+    log(calc(4, 'divide with', 3));     // 1.3333333333333333
+
+    ////////////////
+
+    plus = fx.partial(calc, undefined, '+', undefined);
+    minus = fx.partial(calc, undefined, '-', undefined);
+
+    log(plus(1, 2), minus(3, 4), plus(1, minus(3, 4)));     // 3 , -1 , 0
+
+    ////////////////
+
+    var operators = {
+        'plus':     calc,
+        'minus':    calc,
+        'multiply': calc,
+        'divide':   calc
+    };
+
+    var ops = mapper(function (fn, operator) {
+        return fx.partial(fn, undefined, operator);
+    })(operators);
+
+    opsto = to(ops);
+
+    log(to.keys(ops), to.string(ops));      // plus,minus,multiply,divide , [object Object]
+    log(opsto.keys(), opsto.string());      // plus,minus,multiply,divide , [object Object]
+
+    /////////////////////////
+
+    var op = switcher(ops);
+
+    log(op('plus')(2, 3), op('divide')(4, 3));                  // 5 , 1.3333333333333333
+
+    var opgen = fx.encurry(ops);
+
+    log(opgen(2).plus(3), opgen(4).divide(3));      // 5 , 1.3333333333333333
+
+    var calcgen = fx.enpartial(operators);
+
+    adder = calcgen(undefined, 'plus');
+    divider = calcgen(undefined, 'divide');
+
+    log(adder.minus(2, 3), divider.multiply(4, 3));      // 5 , 1.3333333333333333
+
+
+</script>
+
+</body>
+</html>
