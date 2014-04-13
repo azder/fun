@@ -17,6 +17,10 @@ module.exports = {
 
     prepublish: [
         'default', 'bump:build'
+    ],
+
+    patch: [
+        'default', 'bump-only', 'bump-commit'
     ]
 
 };

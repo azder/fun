@@ -4,6 +4,7 @@
 
 /*jshint node:true*/
 
+//noinspection JSUnusedLocalSymbols
 module.exports = function (grunt) {
 
     //ALWAYS
@@ -13,17 +14,22 @@ module.exports = function (grunt) {
 
     return {
         options: {
+
             files:              files,
-            commitFiles:        files, // '-a' for all files
             updateConfigs:      [],
+
+            commitFiles:        files, // '-a' for all files
             commit:             false,
             commitMessage:      'bump to version %VERSION%',
+
             createTag:          false,
             tagName:            '%VERSION%',
             tagMessage:         'version %VERSION%',
+
             push:               false,
             pushTo:             'upstream',
             gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
+
         }
     };
 
