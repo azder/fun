@@ -786,7 +786,7 @@
         // it should actually augment an object/function with fun's properties
         // based on a class of properties
         // Example: fun.augment(Function.prototype).with('testers,iterator')
-    }    ,
+    },
 
 
     //: ### sub
@@ -796,7 +796,7 @@
         return mixin(encurry(functions), functions);
     }
 
-
+    // var
     ;
 
 
@@ -805,51 +805,49 @@
 
     fun.fn = fun.prototype = mixin(fun, {
 
-        constructor: fun,
+//        constructor: fun,
 
-        tos:    tos,
-        slice:  slice,
-        owns:   owns,
-        addtos: addtos,
-
+        noop:  noop,
+        ident: ident,
         nil:   nil,
         elvis: elvis,
+
         empty: empty,
 
-        dot: dot,
-        nav: nav,
+        dot:      dot,
+        nav:      nav,
+        mixin:    mixin,
+        switcher: switcher,
 
-        extend: extend,
-        mixin:  mixin,
+//        extend: extend,
 
-        switcher:   switcher,
-        selector:   selector,
-        strategist: strategist,
+//        augment: augment,
 
-        enclose: encurry,
+        compose: ocomp,
 
-        augment: augment,
-
-        compose:  ocomp,
         iterator: iterator,
         mapper:   mapper,
 
         curry:  curry,
         acurry: acurry,
 
-        cbind: cbind,
-        abind: abind,
+        ut: sub({
+            tos:   tos,
+            slice: slice,
+            owns:  owns,
+            cbind: cbind,
+            abind: abind,
+            sub:   sub
+        }),
 
         eq: sub({
             str:   streq,
             nostr: nostreq,
             val:   valeq,
-            noval: novaleq,
+            noval: novaleq
         }),
 
         fx: sub({
-            noop:      noop,
-            ident:     ident,
             acomp:     acomp,
             ocomp:     ocomp,
             y:         y,
@@ -858,7 +856,10 @@
             partial:   partial,
             enclose:   enclose,
             encurry:   encurry,
-            enpartial: enpartial
+            enpartial: enpartial,
+//            strategist: strategist
+            switcher:  switcher,
+            selector:  selector
         }),
 
         to: sub({
@@ -877,7 +878,7 @@
             array:   isa,
             number:  isn,
             truthy:  truthy,
-            falsy:   falsy,
+            falsy:   falsy
         })
 
     });
