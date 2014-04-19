@@ -1,6 +1,6 @@
 {
   "name": "funjs",
-  "version": "0.3.4-0",
+  "version": "0.3.4-1",
   "description": "The fun to play with functional suplement for JS",
   "main": "fun.js",
   "directories": {
