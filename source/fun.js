@@ -668,16 +668,16 @@
     },
 
 
-    //: ### partial
+    //: ### part
 
-    partial = function (fn) {
+    part = function (fn) {
 
-        var fixed, par;
+        var fixed, f;
 
         fn = elvis(fn, noop)
         fixed = slice(arguments, 1);
 
-        par = function () {
+        f = function () {
 
             var i, args = slice(fixed), supplied = slice(arguments), len = args.length;
 
@@ -691,11 +691,13 @@
 
         };
 
-        par.toString = function () {
-            return '//fixargs: [' + fixed + ']\n' + fn.toString();
+        f.toString = function () {
+            return '/*fixed: [' + fixed + ']*/ ' + fn.toString();
         }
 
-        return par;
+        f.partied = true;
+
+        return f;
 
     },
 
@@ -703,21 +705,22 @@
 
     curry = function (fn) {
 
-        var cur, args;
+        var f, args;
 
         fn = elvis(fn, noop);
         args = slice(arguments, 1);
 
-        cur = function () {
+        f = function () {
             return fn.apply(this, args.concat(slice(arguments)));
         };
 
-        cur.toString = function () {
-            return '//fixargs: [' + args + ']\n' + fn.toString();
+        f.toString = function () {
+            return '/*fixed: [' + args + ']*/ ' + fn.toString();
         };
 
-        return cur;
+        f.curried = true;
 
+        return f;
 
     },
 
@@ -730,13 +733,13 @@
 
         var f = function () {
 
-            var diff = argn - arguments.length;
+            var args = slice(arguments), diff = argn - args.length;
 
             if (0 >= diff) {
-                return fn.apply(this, arguments);
+                return fn.apply(this, args);
             }
 
-            return acurry(curry.apply(this, [fn].concat(slice(arguments))), diff);
+            return acurry(curry.apply(this, [fn].concat(args)), diff);
 
         };
 
@@ -744,7 +747,8 @@
             return fn.toString();
         };
 
-        f.curried = true;
+        f.auted = true;
+
         return f;
 
     },
@@ -777,12 +781,12 @@
 
     encurry = curry(enclose, curry),
 
-    //: ## enpartial
+    //: ## enpart
     //: generates a function that
-    //: captures the arguments in a context by the partial method
+    //: captures the arguments in a context by the part method
     //: to be used by the provided functions
 
-    enpartial = curry(enclose, partial),
+    enpart = curry(enclose, part),
 
 
     //: ### augment
@@ -854,18 +858,18 @@
         }),
 
         fx: sub({
-            acomp:     acomp,
-            ocomp:     ocomp,
-            y:         y,
-            curry:     curry,
-            acurry:    acurry,
-            partial:   partial,
-            enclose:   enclose,
-            encurry:   encurry,
-            enpartial: enpartial,
+            acomp:    acomp,
+            ocomp:    ocomp,
+            y:        y,
+            curry:    curry,
+            acurry:   acurry,
+            part:     part,
+            enclose:  enclose,
+            encurry:  encurry,
+            enpart:   enpart,
 //            strategist: strategist
-            switcher:  switcher,
-            selector:  selector
+            switcher: switcher,
+            selector: selector
         }),
 
         to: sub({

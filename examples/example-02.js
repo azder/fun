@@ -6,14 +6,26 @@
 
 'use strict';
 
-var fun = require('../fun.js');
+var fun = require('../source/fun.js');
 
 //noinspection JSHint
 //fun({ mixin: this });
+
+var log = fun.ut.cbind(console.log, console);
 
 var add3 = fun.acurry(function (a, b, c) {
     return a + b + c;
 });
 
-console.log(add3, add3(2), add3(2, 5));
+log('add3', add3, add3(2, 5), add3(2, 5, 7));
+
+
+var log3 = fun.acurry(log, 3);
+
+log('log3', log3(undefined, 2));
+
+log3(undefined, 2)(3);
+
+
+
 
