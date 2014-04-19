@@ -20,14 +20,14 @@
     //: In case there is CommonJS module system in place
     //: (used by _Node.js_) then `module.exports` will export the library
     if ('object' === typeof module && 'object' === typeof module.exports) {
-        module.exports = factory(G);
+        module.exports = factory();
         return;
 
     }
 
     //: If the module loading system is AMD, us it's `define` function
     if ('function' === typeof define && define.amd) {
-        define(name, factory);
+        define(factory);
         return;
     }
 
@@ -43,10 +43,16 @@
     'use strict';
 
 
-    function fun() {
+    function fun(options) {
 
         if (!(this instanceof fun)) {
-            return new fun();
+            return new fun(options);
+        }
+
+        options = object(options);
+
+        if (options.mixin) {
+            mixin(options.mixin, fun);
         }
 
         return this;
@@ -756,7 +762,7 @@
 
             var args = slice(arguments);
 
-            return mapper(function (fn, name) {
+            return mapper(function (fn) {
                 return applier.apply(this, [fn].concat(args));
             })(functions);
 
@@ -863,6 +869,7 @@
         }),
 
         to: sub({
+            ident:  ident,
             bool:   bool,
             object: object,
             string: string,
