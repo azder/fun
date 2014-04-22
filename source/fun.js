@@ -41,16 +41,16 @@
     'use strict';
 
 
-    function fun(options) {
+    function Fun(options) {
 
-        if (!(this instanceof fun)) {
-            return new fun(options);
+        if (!(this instanceof Fun)) {
+            return new Fun(options);
         }
 
         options = object(options);
 
         if (options.mixin) {
-            mixin(options.mixin, fun);
+            mixin(options.mixin, Fun);
         }
 
         return this;
@@ -336,7 +336,7 @@
 
     keys = function (o) {
 
-        var k = [], props;
+        var k = [];
 
         if (nil(o)) {
             return k;
@@ -795,9 +795,9 @@
 //
 //    augment = function (string, o) {
 //        //TODO: implement augment
-//        // it should actually augment an object/function with fun's properties
+//        // it should actually augment an object/function with Fun's properties
 //        // based on a class of properties
-//        // Example: fun.augment(Function.prototype).with('testers,iterator')
+//        // Example: Fun.augment(Function.prototype).with('testers,iterator')
 //    },
 
 
@@ -815,9 +815,9 @@
     //:## Exposed
     //:only these are accessible from the outside
 
-    fun.fn = fun.prototype = mixin(fun, {
+    Fun.fn = Fun.prototype = mixin(Fun, {
 
-//        constructor: fun,
+//        constructor: Fun,
 
         noop:  noop,
         ident: ident,
@@ -897,7 +897,7 @@
 
     });
 
-    return fun;
+    return Fun;
 
 }
 ))

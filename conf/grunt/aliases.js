@@ -7,6 +7,7 @@
 module.exports = {
 
     default: [
+        'clean',
         'concat',
         'docco',
         'uglify'
