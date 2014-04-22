@@ -11,7 +11,7 @@ module.exports = {
 
     docs: {
 
-        src: '<%= files.sources %>',
+        src: '<%= files.out.full%>',
 
         options: {
             layout:    'parallel',

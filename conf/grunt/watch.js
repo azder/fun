@@ -11,7 +11,7 @@ module.exports = {
 
     sources: {
         files:   '<%=files.sources%>',
-        tasks:   ['docco', 'uglify'],
+        tasks:   ['default'],
         event:   'change',
         options: {
             atBegin: true

@@ -17,10 +17,9 @@ module.exports = {
 
         files: [
             {
-                expand: true,
-                src:    '**/*.js',
-                cwd:    '<%= files.sourcedir %>',
-                dest:   '<%= files.out.dist %>'
+                expand: false,
+                src:    '<%= files.out.full%>',
+                dest:   '<%= files.out.min%>'
             }
         ]
     }

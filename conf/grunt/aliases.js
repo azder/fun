@@ -7,6 +7,7 @@
 module.exports = {
 
     default: [
+        'concat',
         'docco',
         'uglify'
     ],

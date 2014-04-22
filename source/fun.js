@@ -1,9 +1,7 @@
 /*global define:false, module:false */
-
-//: The fun to play with functional supplement for JS
-//: Created by Azder [(azhder@gmail.com)](mailto:azhder@gmail.com) on 2014-03-05.
-
-//: **Note**: Requires support of ES5.1, you can check the [compatibility table](http://kangax.github.io/es5-compat-table/)
+/**
+ * Created by azder on 2014-04-21.
+ */
 
 //noinspection ThisExpressionReferencesGlobalObjectJS
 (function (G, factory) {
@@ -57,7 +55,7 @@
 
         return this;
 
-    };
+    }
 
 
     var
@@ -674,7 +672,7 @@
 
         var fixed, f;
 
-        fn = elvis(fn, noop)
+        fn = elvis(fn, noop);
         fixed = slice(arguments, 1);
 
         f = function () {
@@ -693,7 +691,7 @@
 
         f.toString = function () {
             return '/*fixed: [' + fixed + ']*/ ' + fn.toString();
-        }
+        };
 
         f.partied = true;
 
@@ -789,14 +787,18 @@
     enpart = curry(enclose, part),
 
 
-    //: ### augment
-
-    augment = function (string, o) {
-        //TODO: implement augment
-        // it should actually augment an object/function with fun's properties
-        // based on a class of properties
-        // Example: fun.augment(Function.prototype).with('testers,iterator')
+    plugin = function () {
+        //TODO: implement plugin
     },
+
+//    // ### augment
+//
+//    augment = function (string, o) {
+//        //TODO: implement augment
+//        // it should actually augment an object/function with fun's properties
+//        // based on a class of properties
+//        // Example: fun.augment(Function.prototype).with('testers,iterator')
+//    },
 
 
     //: ### sub
@@ -829,17 +831,18 @@
         mixin:    mixin,
         switcher: switcher,
 
-//        extend: extend,
-
-//        augment: augment,
-
         compose: ocomp,
 
         iterator: iterator,
         mapper:   mapper,
 
+        part:   part,
         curry:  curry,
         acurry: acurry,
+
+//        extend: extend,
+//        augment: augment,
+
 
         ut: sub({
             tos:   tos,
@@ -861,9 +864,9 @@
             acomp:    acomp,
             ocomp:    ocomp,
             y:        y,
+            part:     part,
             curry:    curry,
             acurry:   acurry,
-            part:     part,
             enclose:  enclose,
             encurry:  encurry,
             enpart:   enpart,
