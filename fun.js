@@ -141,6 +141,34 @@
         return nil(value) ? dfault : value;
     },
 
+
+    maybe = function (fn, length) {
+
+        return function f() {
+
+            var i = 0, args = slice(arguments), len = elvis(length, args.length);
+
+            if (0 === len) {
+                return void 0;
+            }
+
+            while (i < len) {
+                if (nil(args[i])) {
+                    return void 0;
+                }
+                i += 1;
+            }
+
+            f.toString = function () {
+                return '/*maybe: ' + len + ' */ ' + fn.toString();
+            };
+
+            return fn.apply(this, args);
+
+        };
+
+    },
+
     //: ### addtos
     //:  **Note:** requires support of `Object.defineProperty`
     //: (ES5 standard, supported by these [browsers](http://kangax.github.io/es5-compat-table/#Object.defineProperty))
@@ -200,13 +228,13 @@
     },
 
 
-    //: ### valeq
+    // ### valeq
     //TODO: implement valeq
-    valeq = unimplemented,
+    // valeq = unimplemented,
 
-    //: ### novaleq
+    // ### novaleq
     //TODO: implement novaleq
-    novaleq = unimplemented,
+    // novaleq = unimplemented,
 
 
     //: ### truthy
@@ -509,6 +537,7 @@
                     if (!owns(object, index)) {
                         continue;
                     }
+                    //noinspection JSUnfilteredForInLoop
                     mapped[index] = fn(object[index], index, object);
                 }
                 return mapped;
@@ -538,7 +567,9 @@
             arg = args[i];
 
             for (key in arg) {
+                //noinspection JSUnfilteredForInLoop
                 if (owns(arg, key)) {
+                    //noinspection JSUnfilteredForInLoop
                     obj[key] = arg[key];
                 }
             }
@@ -549,10 +580,10 @@
 
     },
 
-    //: ## extend
-    //: like `mixin` only difference is preserving already present values
+    // ## extend
+    // like `mixin` only difference is preserving already present values
     //TODO: implement extend
-    extend = unimplemented,
+    // extend = unimplemented,
 
     //: ## switcher
 
@@ -602,9 +633,9 @@
 
     },
 
-    //: ## strategist
+    // ## strategist
     //TODO: implement strategist
-    strategist = unimplemented,
+    // strategist = unimplemented,
 
     //: ### acomp
     //: composes multiple functions into one
@@ -797,9 +828,9 @@
     enpart = curry(enclose, part),
 
 
-    plugin = function () {
-        //TODO: implement plugin
-    },
+//    plugin = function () {
+//        //TODO: implement plugin
+//    },
 
 //    // ### augment
 //
@@ -833,6 +864,7 @@
         ident: ident,
         nil:   nil,
         elvis: elvis,
+        maybe: maybe,
 
         empty: empty,
 
@@ -866,8 +898,8 @@
         eq: sub({
             str:   streq,
             nostr: nostreq,
-            val:   valeq,
-            noval: novaleq
+            val:   unimplemented, // valeq,
+            noval: unimplemented // novaleq
         }),
 
         fx: sub({
