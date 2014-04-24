@@ -103,6 +103,7 @@
         return nil(value) ? dfault : value;
     },
 
+    //: ### maybe
 
     maybe = function (fn, length) {
 
@@ -542,6 +543,40 @@
 
     },
 
+    //: ## mixout
+    //: **Note:** overwrites the values of the following objects' fields if found in the first one
+
+    mixout = function () {
+
+        var key, i, args = slice(arguments), obj = args.shift(), len = args.length;
+
+        obj = (nil(obj) ? empty() : obj);
+
+        for (key in obj) {
+
+            //noinspection JSUnfilteredForInLoop
+            if (!owns(obj, key)) {
+                continue;
+            }
+
+            for (i = 0; i < len; i += 1) {
+
+                if (nil(args[i])) {
+                    continue;
+                }
+
+                //noinspection JSUnfilteredForInLoop
+                args[i][key] = obj[key];
+
+            }
+
+        }
+
+        return args;
+
+    },
+
+
     // ## extend
     // like `mixin` only difference is preserving already present values
     //TODO: implement extend
@@ -754,24 +789,27 @@
 
     },
 
-    //: ## enclose
-    //: generates a function that
-    //: captures the arguments in a context by a supplied applier method
-    //: to be used by the provided functions
+    //: ## encloser
+    //: generates an "encloser" function that captures its arguments in a context
+    //: to be supplied by the `applier` to the `functions`
 
-    enclose = function (applier, functions) {
+    //: **Note**: functions are added to the fn property of the generated ecloser
 
-        functions = object(functions);
+    encloser = function (applier, functions) {
 
-        return function () {
+        var f = function () {
 
             var args = slice(arguments);
 
             return mapper(function (fn) {
                 return applier.apply(this, [fn].concat(args));
-            })(functions);
+            })(f.fn);
 
         };
+
+        f.fn = object(functions);
+
+        return f;
 
     },
 
@@ -780,27 +818,18 @@
     //: captures the arguments in a context by the curry method
     //: to be used by the provided functions
 
-    encurry = curry(enclose, curry),
+    encurry = curry(encloser, curry),
 
     //: ## enpart
     //: generates a function that
     //: captures the arguments in a context by the part method
     //: to be used by the provided functions
 
-    enpart = curry(enclose, part),
+    enpart = curry(encloser, part),
 
 
 //    plugin = function () {
 //        //TODO: implement plugin
-//    },
-
-//    // ### augment
-//
-//    augment = function (string, o) {
-//        //TODO: implement augment
-//        // it should actually augment an object/function with Fun's properties
-//        // based on a class of properties
-//        // Example: Fun.augment(Function.prototype).with('testers,iterator')
 //    },
 
 
@@ -830,9 +859,12 @@
 
         empty: empty,
 
-        dot:      dot,
-        nav:      nav,
-        mixin:    mixin,
+        dot: dot,
+        nav: nav,
+
+        mixin:  mixin,
+        mixout: mixout,
+
         switcher: switcher,
 
         compose: ocomp,
@@ -845,8 +877,6 @@
         acurry: acurry,
 
 //        extend: extend,
-//        augment: augment,
-
 
         ut: sub({
             tos:   tos,
@@ -871,10 +901,10 @@
             part:     part,
             curry:    curry,
             acurry:   acurry,
-            enclose:  enclose,
+            encloser:  encloser,
             encurry:  encurry,
             enpart:   enpart,
-//            strategist: strategist
+            // strategist: strategist
             switcher: switcher,
             selector: selector
         }),
