@@ -39,13 +39,17 @@ module.exports = function (grunt) {
                 base: process.cwd(),
 
                 sourcedir: '<%= files.base%>/source',
-                sources:   [
+
+                sources: [
                     '<%= files.sourcedir%>/header.js',
                     '<%= files.sourcedir%>/fun.js'
                 ],
 
+                tests: '<%= files.base%>/test/**/*.spec.js',
+
                 confdir: '<%= files.base %>/conf',
-                conf:    {
+
+                conf: {
                     docco: '<%= files.confdir %>/docco'
                 },
 
@@ -56,7 +60,8 @@ module.exports = function (grunt) {
                     full:  '<%= files.base%>/<%= name.short%>.js',
                     min:   '<%= files.base%>/<%= name.short%>-min.js',
                     map:   '<%= files.base%>/<%= name.short%>-min.map',
-                    dir:   '<%= files.base%>'
+                    dir:   '<%= files.base%>',
+                    built: ['<%= files.out.full%>']
                 }
 
             }

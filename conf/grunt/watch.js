@@ -11,7 +11,7 @@ module.exports = {
 
     sources: {
         files:   '<%=files.sources%>',
-        tasks:   ['default'],
+        tasks:   ['default', 'jshint:dev'/*, 'jshint:asi'*/],
         event:   'change',
         options: {
             atBegin: true

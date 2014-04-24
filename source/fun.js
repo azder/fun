@@ -1,41 +1,13 @@
-/*global define:false, module:false */
+//noinspection CommaExpressionJS
+
 /**
- * Created by azder on 2014-04-21.
+ * Created by azder on 2014-03-05.
  */
 
-//noinspection ThisExpressionReferencesGlobalObjectJS
-(function (G, factory) {
+//: first parameter is the name to use as a global for this library
+//: when included by `<script src="">` tag in browser
 
-    //: A function that handles the exporting of
-    //: this library into the environment
-
-    // ALWAYS
-    'use strict';
-
-    //: the name to use as a global for this library
-    var name = 'fun';
-
-    //: In case there is CommonJS module system in place
-    //: (used by _Node.js_) then `module.exports` will export the library
-    if ('object' === typeof module && 'object' === typeof module.exports) {
-        module.exports = factory();
-        return;
-
-    }
-
-    //: If the module loading system is AMD, us it's `define` function
-    if ('function' === typeof define && define.amd) {
-        define(factory);
-        return;
-    }
-
-    //: In case this file is included via Browser's `script` tag,
-    //: just export it as a global using `name` variable
-
-    G[name] = factory(G);
-
-
-}(this, function () {
+('fun', function () { // jshint ignore:line
 
     // ALWAYS
     'use strict';
@@ -931,6 +903,4 @@
 
     return Fun;
 
-}
-))
-;
+});  // jshint ignore:line

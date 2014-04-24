@@ -7,14 +7,44 @@
 //ALWAYS
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = {
 
-    return {
-        all: [
-            'Gruntfile.js',
-            'grunt/*.js',
-            'lib/*.js',
-            'test/*.js'
-        ]
-    };
+    options: {
+        jshintrc: true,
+        reporter: require('jshint-stylish')
+    },
+
+    dev: {
+
+        options: {
+            force: true
+        },
+
+        files: {
+            src: [
+                'Gruntfile.js',
+                'conf/grunt/*.js',
+                '<%= files.sourcedir %>/fun.js',
+                '<%= files.tests %>'
+            ]
+        }
+
+    },
+
+    asi: {
+
+        options: {
+            asi: true
+        },
+
+        files: {
+            src: [
+                '<%= files.sourcedir %>/header.js'
+            ]
+        }
+
+    },
+
+    built: '<%= files.out.built%>'
+
 };

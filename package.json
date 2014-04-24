@@ -1,6 +1,6 @@
 {
   "name": "funjs",
-  "version": "0.3.7-0",
+  "version": "0.3.8-0",
   "description": "The fun to play with functional suplement for JS",
   "main": "fun.js",
   "directories": {
@@ -22,7 +22,9 @@
     "mocha": "^1.18.2",
     "grunt-bump": "0.0.13",
     "grunt-contrib-concat": "^0.4.0",
-    "grunt-contrib-clean": "^0.5.0"
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "jshint-stylish": "^0.1.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

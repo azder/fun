@@ -9,6 +9,7 @@ module.exports = {
     default: [
         'clean',
         'concat',
+        'jshint:built',
         'docco',
         'uglify'
     ],
