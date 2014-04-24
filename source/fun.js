@@ -127,7 +127,7 @@
     //:
     //: **Note:** if `dfault` is returned, the result can still be `null` or `undefined`
 
-    elvis = function (value, dfault) {
+    elvis = function (dfault, value) {
         return nil(value) ? dfault : value;
     },
 
@@ -136,7 +136,7 @@
 
         return function f() {
 
-            var i = 0, args = slice(arguments), len = elvis(length, args.length);
+            var i = 0, args = slice(arguments), len = elvis(args.length, length);
 
             if (0 === len) {
                 return void 0;
@@ -192,9 +192,9 @@
     //: **Note:** requires support of `Array.isArray` (ES5 standard)
     //: to guarantee that all edge cases are covered
 
-    isa = elvis(Array.isArray, function (value) {
+    isa = elvis(function (value) {
         return tos(value) === '[object Array]';
-    }),
+    }, Array.isArray),
 
     //: ### isn
     //: returns `true` when `value` is a `Number`, `false` otherwise
@@ -582,7 +582,7 @@
         map = object(map);
 
         return function (key) {
-            return elvis(map[string(key)], map['']);
+            return elvis(map[''], map[string(key)]);
         };
 
     },
@@ -703,7 +703,7 @@
 
         var fixed, f;
 
-        fn = elvis(fn, noop);
+        fn = elvis(noop, fn);
         fixed = slice(arguments, 1);
 
         f = function () {
@@ -736,7 +736,7 @@
 
         var f, args;
 
-        fn = elvis(fn, noop);
+        fn = elvis(noop, fn);
         args = slice(arguments, 1);
 
         f = function () {
@@ -757,7 +757,7 @@
 
     acurry = function (fn, argn) {
 
-        fn = elvis(fn, noop);
+        fn = elvis(noop, fn);
         argn = number(argn, fn.length);
 
         var f = function () {
