@@ -1,48 +1,48 @@
 {
-  "name": "funjs",
-  "version": "0.3.10-0",
-  "description": "The fun to play with functional suplement for JS",
-  "main": "fun.js",
-  "directories": {
-    "doc": "docs",
-    "example": "examples"
-  },
-  "dependencies": {
-    "docco": "~0.6.3",
-    "grunt": "~0.4.4",
-    "load-grunt-tasks": "~0.4.0"
-  },
-  "devDependencies": {
-    "grunt": "^0.4.4",
-    "load-grunt-config": "^0.8.0-beta.1",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-docco": "^0.3.3",
-    "grunt-contrib-uglify": "^0.4.0",
-    "chai": "^1.9.1",
-    "mocha": "^1.18.2",
-    "grunt-bump": "0.0.13",
-    "grunt-contrib-concat": "^0.4.0",
-    "grunt-contrib-clean": "^0.5.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "jshint-stylish": "^0.1.5"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/azder/fun.git"
-  },
-  "keywords": [
-    "fun",
-    "fun.js",
-    "functional",
-    "library"
-  ],
-  "author": "Azder",
-  "license": "LGPLv3",
-  "bugs": {
-    "url": "https://github.com/azder/fun/issues"
-  },
-  "homepage": "https://github.com/azder/fun"
+    "name":            "funjs",
+    "version":         "0.3.10-0",
+    "description":     "The fun to play with functional suplement for JS",
+    "main":            "fun.js",
+    "directories":     {
+        "doc":     "docs",
+        "example": "examples"
+    },
+    "dependencies":    {
+
+    },
+    "devDependencies": {
+        "docco":                "~0.6.3",
+        "load-grunt-tasks":     "~0.4.0",
+        "grunt":                "^0.4.4",
+        "load-grunt-config":    "^0.8.0-beta.1",
+        "grunt-contrib-watch":  "^0.6.1",
+        "grunt-docco":          "^0.3.3",
+        "grunt-contrib-uglify": "^0.4.0",
+        "chai":                 "^1.9.1",
+        "mocha":                "^1.18.2",
+        "grunt-bump":           "0.0.13",
+        "grunt-contrib-concat": "^0.4.0",
+        "grunt-contrib-clean":  "^0.5.0",
+        "grunt-contrib-jshint": "^0.10.0",
+        "jshint-stylish":       "^0.1.5"
+    },
+    "scripts":         {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository":      {
+        "type": "git",
+        "url":  "git://github.com/azder/fun.git"
+    },
+    "keywords":        [
+        "fun",
+        "fun.js",
+        "functional",
+        "library"
+    ],
+    "author":          "Azder",
+    "license":         "LGPLv3",
+    "bugs":            {
+        "url": "https://github.com/azder/fun/issues"
+    },
+    "homepage":        "https://github.com/azder/fun"
 }

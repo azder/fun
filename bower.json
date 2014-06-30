@@ -16,6 +16,12 @@
     "license":     "LGPLv3",
     "ignore":      [
         "**/.*",
+        "conf",
+        "source",
+        "docs",
+        "examples",
+        "Gruntfile.js",
+        "package.json",
         "node_modules",
         "bower-components",
         "bower_components",
