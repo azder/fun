@@ -8,7 +8,6 @@
 
 var fun = require('../source/fun.js');
 
-//noinspection JSHint
 //fun({ mixin: this });
 
 var log = fun.ut.cbind(console.log, console);

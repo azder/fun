@@ -1,0 +1,7 @@
+{
+    "predef":   ["define"],
+    "node":     true,
+    "browser":  true,
+    "devel":    true,
+    "quotmark": false
+}
