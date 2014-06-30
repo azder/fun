@@ -851,32 +851,40 @@
 
 //        constructor: Fun,
 
-        noop:  noop,
-        ident: ident,
-        nil:   nil,
-        elvis: elvis,
-        maybe: maybe,
+        noop:  noop, // in ?
+        ident: ident, // in ?
+        maybe: maybe, // in ?
 
-        empty: empty,
+        iterator: iterator, // in ?
+        mapper:   mapper, // in ?
 
-        dot: dot,
-        nav: nav,
+        nil:   nil, // in `is`
+        elvis: elvis, // in `ob`
+        empty: empty, // in `ob`
+        dot: dot, // in `ob`
+        nav: nav, // in `ob`
+        mixin:  mixin, // in `ob`
+        mixout: mixout, // in `ob`
 
-        mixin:  mixin,
-        mixout: mixout,
+        switcher: switcher, // in `fx`
+        compose: ocomp, // in `fx`
 
-        switcher: switcher,
-
-        compose: ocomp,
-
-        iterator: iterator,
-        mapper:   mapper,
-
-        part:   part,
-        curry:  curry,
-        acurry: acurry,
+        part:   part, // in `fx`
+        curry:  curry, // in `fx`
+        acurry: acurry, // in `fx`
 
 //        extend: extend,
+
+        ob: sub({
+            //iterator: iterator,
+            //mapper:   mapper,
+            elvis:  elvis,
+            empty:  empty,
+            dot:    dot,
+            nav:    nav,
+            mixin:  mixin,
+            mixout: mixout
+        }),
 
         ut: sub({
             tos:   tos,
@@ -895,16 +903,18 @@
         }),
 
         fx: sub({
+            //iterator: iterator,
+            //mapper:   mapper,
+            compose:  ocomp,
             acomp:    acomp,
             ocomp:    ocomp,
             y:        y,
             part:     part,
             curry:    curry,
             acurry:   acurry,
-            encloser:  encloser,
+            encloser: encloser,
             encurry:  encurry,
             enpart:   enpart,
-            // strategist: strategist
             switcher: switcher,
             selector: selector
         }),
