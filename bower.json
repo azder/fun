@@ -1,7 +1,7 @@
 {
     "name":        "funjs",
     "main":        "fun.js",
-    "version":     "0.3.9-0",
+    "version":     "0.3.10-0",
     "homepage":    "https://github.com/azder/fun",
     "authors":     [
         "azder <azhder@gmail.com>"
