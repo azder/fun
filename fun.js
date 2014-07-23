@@ -20,18 +20,20 @@
 
     return function (name, factory) {
 
+
+        //: If the module loading system is AMD, us it's `define` function
+        if ('function' === typeof define && define.amd) {
+            define(factory);
+            return;
+        }
+
+
         //: In case there is CommonJS module system in place
         //: (used by _Node.js_) then `module.exports` will export the library
         if (module && typeof module.exports) {
             module.exports = factory();
             return;
 
-        }
-
-        //: If the module loading system is AMD, us it's `define` function
-        if ('function' === typeof define && define.amd) {
-            define(factory);
-            return;
         }
 
         //: In case this file is included via Browser's `script` tag,
